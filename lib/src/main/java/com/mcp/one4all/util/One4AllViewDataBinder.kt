@@ -31,8 +31,8 @@ object One4AllViewDataBinder : ViewDataBinder<One4AllView>{
     }
 
     @BindingAdapter("app:onEndIconClick")
-    override fun setEndIconClickListener(view: One4AllView, onClickListener: View.OnClickListener?) {
-        super.setEndIconClickListener(view, onClickListener)
+    override fun setOnEndIconClickListener(view: One4AllView, onClickListener: View.OnClickListener?) {
+        super.setOnEndIconClickListener(view, onClickListener)
     }
 
     @BindingAdapter("app:visible")

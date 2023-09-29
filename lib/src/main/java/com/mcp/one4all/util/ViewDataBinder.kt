@@ -40,9 +40,9 @@ interface ViewDataBinder<T : IOne4AllView> {
         return view.value()
     }
 
-    fun setEndIconClickListener(view: T, onClickListener: View.OnClickListener?) {
+    fun setOnEndIconClickListener(view: T, onClickListener: View.OnClickListener?) {
         onClickListener?.apply {
-            view.endIconOnClickListener = this
+            view.onEndIconClickListener = this
         }
     }
 

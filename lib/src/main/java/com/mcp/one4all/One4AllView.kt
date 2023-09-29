@@ -9,7 +9,6 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.text.method.PasswordTransformationMethod
 import android.util.AttributeSet
-import android.util.Patterns
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -31,21 +30,22 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class One4AllView : IOne4AllView, LinearLayout {
-    private var isLabelAllCaps: Boolean = false
-    private var validator = InputFieldValidator()
-    private var onInputChangeListener: OnInputChangeListener? = null
-    private var minLength: Int = 0
-    private var maxLength: Int = 0
-    private var dateFormat: String? = "MM/dd/yyyy"
-    private var timeFormat: String? = "hh:mma"
-    private val durationFormat: String = "H:m:s"
-    var isRequired: Boolean = false
-    private var isShowRequired: Boolean = true
+    override var isRequired: Boolean = DefaultValues.isRequired
+    override var isShowRequiredIndicator: Boolean = DefaultValues.isShowRequiredIndicator
+    override var isLabelAllCaps: Boolean = DefaultValues.isShowRequiredIndicator
+    override var hideLabelOnEdit: Boolean = DefaultValues.hideLabelOnEdit
+    override var dateFormat: String? = DefaultValues.dateFormat
+    override var timeFormat: String? = DefaultValues.timeFormat
+
     private var defaultDate: String = ""
     private var defaultTime: String = ""
     var minDate: MinDate = MinDate.None
     var maxDate: MaxDate = MaxDate.None
-    private var hideLabelOnEdit: Boolean = false
+
+    private var validator = InputFieldValidator()
+    private var onInputChangeListener: OnInputChangeListener? = null
+    private var minLength: Int = 0
+    private var maxLength: Int = 0
     private lateinit var binding: ViewInputFieldBinding
 
     constructor(context: Context) : super(context) {
@@ -65,20 +65,20 @@ class One4AllView : IOne4AllView, LinearLayout {
     }
 
     private fun initViews(attrs: AttributeSet?) {
-        val array = context.obtainStyledAttributes(attrs, R.styleable.InputField)
-        if (array.hasValue(R.styleable.InputField_dateFormat)) {
-            dateFormat = array.getString(R.styleable.InputField_dateFormat)
+        val array = context.obtainStyledAttributes(attrs, R.styleable.One4AllView)
+        if (array.hasValue(R.styleable.One4AllView_dateFormat)) {
+            dateFormat = array.getString(R.styleable.One4AllView_dateFormat)
         }
         dateFormatter = SimpleDateFormat(dateFormat, Locale.US)
-        if (array.hasValue(R.styleable.InputField_timeFormat)) {
-            timeFormat = array.getString(R.styleable.InputField_timeFormat)
+        if (array.hasValue(R.styleable.One4AllView_timeFormat)) {
+            timeFormat = array.getString(R.styleable.One4AllView_timeFormat)
         }
         timeFormatter = SimpleDateFormat(timeFormat, Locale.US)
-        if (array.hasValue(R.styleable.InputField_minDate)) {
-            minDate = MinDate.values()[array.getInt(R.styleable.InputField_minDate, 0)]
+        if (array.hasValue(R.styleable.One4AllView_minDate)) {
+            minDate = MinDate.values()[array.getInt(R.styleable.One4AllView_minDate, 0)]
         }
-        if (array.hasValue(R.styleable.InputField_maxDate)) {
-            maxDate = MaxDate.values()[array.getInt(R.styleable.InputField_maxDate, 0)]
+        if (array.hasValue(R.styleable.One4AllView_maxDate)) {
+            maxDate = MaxDate.values()[array.getInt(R.styleable.One4AllView_maxDate, 0)]
         }
         binding = ViewInputFieldBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -95,7 +95,7 @@ class One4AllView : IOne4AllView, LinearLayout {
             binding.editText.inputType = value
         }
 
-    override var endIconOnClickListener: OnClickListener? = null
+    override var onEndIconClickListener: OnClickListener? = null
         set(value) {
             field = value
             binding.apply {
@@ -300,7 +300,6 @@ class One4AllView : IOne4AllView, LinearLayout {
 
     private var dateFormatter: SimpleDateFormat = SimpleDateFormat(dateFormat)
     private var timeFormatter: SimpleDateFormat = SimpleDateFormat(timeFormat)
-    private var durationFormatter: SimpleDateFormat = SimpleDateFormat(durationFormat)
 
     val dateAsMillis: Long
         get() {
@@ -310,7 +309,7 @@ class One4AllView : IOne4AllView, LinearLayout {
 
             try {
                 val date = dateFormatter.parse(text)
-                return date?.time!!
+                return date?.time ?: 0L
             } catch (e: ParseException) {
                 return 0
             }
@@ -321,7 +320,7 @@ class One4AllView : IOne4AllView, LinearLayout {
         set(value) {
             field = value
             binding.apply {
-                val _label = if (isRequired && isShowRequired) "$value *"
+                val _label = if (isRequired && isShowRequiredIndicator) "$value *"
                 else value
                 if (isLabelAllCaps) {
                     textLabel.hint = _label.toUpperCase()
@@ -346,16 +345,11 @@ class One4AllView : IOne4AllView, LinearLayout {
             binding.editText.setText(value)
         }
 
-    var dateFrom: String? = ""
-    var dateTo: String? = ""
-
     private val textWatcher = object : TextWatcher {
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-
         }
 
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-
         }
 
         override fun afterTextChanged(editable: Editable) {
@@ -363,9 +357,8 @@ class One4AllView : IOne4AllView, LinearLayout {
                 validator.validateAsTyping()
             }
 
-            if (onInputChangeListener != null) {
-                onInputChangeListener!!.onInputChange(this@One4AllView)
-            }
+            onInputChangeListener?.onInputChange(this@One4AllView)
+
             updateLabel()
             updateDisplayType(editable.toString())
         }
@@ -391,64 +384,64 @@ class One4AllView : IOne4AllView, LinearLayout {
         }
 
     private fun initAttributes(array: TypedArray) {
-        isShowRequired = array.getBoolean(R.styleable.InputField_showRequired, true)
-        isRequired = array.getBoolean(R.styleable.InputField_required, false)
+        isShowRequiredIndicator = array.getBoolean(R.styleable.One4AllView_showRequiredIndicator, true)
+        isRequired = array.getBoolean(R.styleable.One4AllView_required, false)
         inputType = array.getInt(
-            R.styleable.InputField_android_inputType,
+            R.styleable.One4AllView_android_inputType,
             EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
         )
-        viewType = ViewType.values()[array.getInt(R.styleable.InputField_type, 0)]
-        setValue(array.getString(R.styleable.InputField_value) ?: "")
+        viewType = ViewType.values()[array.getInt(R.styleable.One4AllView_type, 0)]
+        setValue(array.getString(R.styleable.One4AllView_value) ?: "")
 
-        isLabelAllCaps = array.getBoolean(R.styleable.InputField_labelAllCaps, false)
-        label = array.getString(R.styleable.InputField_label) ?: ""
+        isLabelAllCaps = array.getBoolean(R.styleable.One4AllView_labelAllCaps, false)
+        label = array.getString(R.styleable.One4AllView_label) ?: ""
 
-        if (array.hasValue(R.styleable.InputField_endIcon)) {
-            endIcon = array.getResourceId(R.styleable.InputField_endIcon, 0)
+        if (array.hasValue(R.styleable.One4AllView_endIcon)) {
+            endIcon = array.getResourceId(R.styleable.One4AllView_endIcon, 0)
         }
 
-        defaultDate = array.getString(R.styleable.InputField_defaultDate) ?: ""
-        defaultTime = array.getString(R.styleable.InputField_defaultTime) ?: ""
-        minLength = array.getInteger(R.styleable.InputField_minLength, 0)
-        maxLength = array.getInteger(R.styleable.InputField_maxLength, -1)
-        hideLabelOnEdit = array.getBoolean(R.styleable.InputField_hideLabelOnEdit, false)
+        defaultDate = array.getString(R.styleable.One4AllView_defaultDate) ?: ""
+        defaultTime = array.getString(R.styleable.One4AllView_defaultTime) ?: ""
+        minLength = array.getInteger(R.styleable.One4AllView_minLength, 0)
+        maxLength = array.getInteger(R.styleable.One4AllView_maxLength, -1)
+        hideLabelOnEdit = array.getBoolean(R.styleable.One4AllView_hideLabelOnEdit, false)
 
         binding.apply {
             editText.setOnFocusChangeListener { _, _ ->
                 updateLabel()
             }
 
-            if (array.hasValue(R.styleable.InputField_android_textColor)) {
-                val textColor = array.getColor(R.styleable.InputField_android_textColor, 0)
+            if (array.hasValue(R.styleable.One4AllView_android_textColor)) {
+                val textColor = array.getColor(R.styleable.One4AllView_android_textColor, 0)
                 if (textColor != 0) {
                     editText.setTextColor(textColor)
                 }
             }
 
-            if (array.hasValue(R.styleable.InputField_android_gravity)) {
-                val gravity = array.getInt(R.styleable.InputField_android_gravity, Gravity.START)
+            if (array.hasValue(R.styleable.One4AllView_android_gravity)) {
+                val gravity = array.getInt(R.styleable.One4AllView_android_gravity, Gravity.START)
                 editText.gravity = gravity
             }
 
-            if (array.hasValue(R.styleable.InputField_android_minLines)) {
-                minLines = array.getInt(R.styleable.InputField_android_minLines, 1)
+            if (array.hasValue(R.styleable.One4AllView_android_minLines)) {
+                minLines = array.getInt(R.styleable.One4AllView_android_minLines, 1)
             }
 
-            if (array.hasValue(R.styleable.InputField_android_textSize)) {
-                val indexOfAttrTextSize = array.getIndex(R.styleable.InputField_android_textSize)
+            if (array.hasValue(R.styleable.One4AllView_android_textSize)) {
+                val indexOfAttrTextSize = array.getIndex(R.styleable.One4AllView_android_textSize)
                 val textSize = array.getDimensionPixelSize(indexOfAttrTextSize, -1)
                 editText.setTextSizeSp(textSize.toFloat())
             }
 
-            if (array.hasValue(R.styleable.InputField_helperText)) {
-                helperText = array.getString(R.styleable.InputField_helperText) ?: ""
+            if (array.hasValue(R.styleable.One4AllView_helperText)) {
+                helperText = array.getString(R.styleable.One4AllView_helperText) ?: ""
             }
 
-            if (array.hasValue(R.styleable.InputField_android_enabled)) {
-                isEnabled = array.getBoolean(R.styleable.InputField_android_enabled, true)
+            if (array.hasValue(R.styleable.One4AllView_android_enabled)) {
+                isEnabled = array.getBoolean(R.styleable.One4AllView_android_enabled, true)
             }
 
-            editText.imeOptions = array.getInt(R.styleable.InputField_android_imeOptions, 0)
+            editText.imeOptions = array.getInt(R.styleable.One4AllView_android_imeOptions, 0)
             addTextChangedListener(textWatcher)
             editText.setOnEditorActionListener { _, i, _ ->
                 if (i == EditorInfo.IME_ACTION_GO || i == EditorInfo.IME_ACTION_DONE) {
@@ -457,9 +450,9 @@ class One4AllView : IOne4AllView, LinearLayout {
                 true
             }
 
-            if (array.hasValue(R.styleable.InputField_android_lineSpacingExtra)) {
+            if (array.hasValue(R.styleable.One4AllView_android_lineSpacingExtra)) {
                 val lineSpacing =
-                    array.getDimensionPixelSize(R.styleable.InputField_android_lineSpacingExtra, 0)
+                    array.getDimensionPixelSize(R.styleable.One4AllView_android_lineSpacingExtra, 0)
                 editText.setLineSpacing(
                     TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
@@ -588,7 +581,7 @@ class One4AllView : IOne4AllView, LinearLayout {
             val dateTo = Date(range.second)
             text = dateFormatter.format(dateFrom.time) + " - " + dateFormatter.format(dateTo.time)
         }
-        dateRangePickerDialog.show((context as AppCompatActivity).supportFragmentManager,"DateRangePicker")
+//        dateRangePickerDialog.show((context as AppCompatActivity).supportFragmentManager,"DateRangePicker")
     }
 
     open inner class InputFieldValidator {
@@ -647,7 +640,7 @@ class One4AllView : IOne4AllView, LinearLayout {
                     isValid = text.isEmpty() || InputValidator.isValidEmail(text)
                 }
                 ViewType.textPhone -> {
-                    isValid = text.isEmpty() || isValidPhoneNumber(text)
+                    isValid = text.isEmpty() || InputValidator.isValidPhoneNumber(text)
                 }
                 ViewType.textUrl -> {
                     isValid = text.isEmpty() || InputValidator.isValidUrl(text)
@@ -754,18 +747,6 @@ class One4AllView : IOne4AllView, LinearLayout {
                     text = _value
                 }
             }
-        }
-    }
-
-    interface OnInputChangeListener {
-        fun onInputChange(inputView: One4AllView)
-    }
-
-    fun isValidPhoneNumber(phoneNumber: String?): Boolean {
-        return if (phoneNumber.isNullOrEmpty()) {
-            false
-        } else {
-            Patterns.PHONE.matcher(phoneNumber).matches()
         }
     }
 }

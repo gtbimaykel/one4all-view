@@ -7,13 +7,13 @@
     <attr name="required" format="boolean" />
     <attr name="labelAllCaps" format="boolean" />
 
-    <declare-styleable name="InputField">
+    <declare-styleable name="One4AllView">
         <attr name="label" />
         <attr name="value" />
         <attr name="labelAllCaps" />
         <attr name="required" />
         <attr name="helperText" />
-        <attr name="showRequired" format="string" />
+        <attr name="showRequiredIndicator" format="string" />
         <attr name="defaultDate" format="string" />
         <attr name="defaultTime" format="string" />
         <attr name="dateFormat" format="string" />
