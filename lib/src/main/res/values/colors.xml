@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6650a4</color>
+    <color name="colorPrimaryDark">#625b71</color>
+    <color name="colorAccent">#7D5260</color>
+    <color name="colorAccentPressed">#cc7D5260</color>
+    <color name="colorNormal">#65676B</color>
+
+    <color name="errorColor">#F85454</color>
+    <color name="white90alpha">#E6FFFFFF</color>
+    <color name="white50alpha">#80FFFFFF</color>
+    <color name="disabledButton">#65676B</color>
+    <color name="textbox">#C2C8C9</color>
+    <color name="textPrimary">#050505</color>
+    <color name="linkColor">#625b71</color>
+</resources>

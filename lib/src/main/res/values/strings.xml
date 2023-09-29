@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_select_dates">Select dates</string>
+
+    <string name="validationError_too_short">Must be %d characters or more.</string>
+    <string name="validationError_too_long">Must not be more than %d characters.</string>
+    <string name="validationError_input_required">This is a required field.</string>
+    <string name="validationError_input_required_vowel">Please enter an %s.</string>
+    <string name="validationError_invalid">Please enter a valid %s.</string>
+    <string name="validationError_invalid_username_format">Must be 3 to 18 characters long and contain only letters, numbers and underscore characters.</string>
+    <string name="validationError_invalid_password_format">Password must be at least 8 characters long and contain at least one letter, one number and one special character.</string>
+    <string name="validationError_passwords_does_not_match">Passwords does not match</string>
+</resources>

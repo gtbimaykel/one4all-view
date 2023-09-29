@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="value" format="string" />
+    <attr name="helperText" format="string" />
+    <attr name="label" format="string" />
+    <attr name="required" format="boolean" />
+    <attr name="labelAllCaps" format="boolean" />
+
+    <declare-styleable name="InputField">
+        <attr name="label" />
+        <attr name="value" />
+        <attr name="labelAllCaps" />
+        <attr name="required" />
+        <attr name="helperText" />
+        <attr name="showRequired" format="string" />
+        <attr name="defaultDate" format="string" />
+        <attr name="defaultTime" format="string" />
+        <attr name="dateFormat" format="string" />
+        <attr name="timeFormat" format="string" />
+        <attr name="minLength" format="integer" />
+        <attr name="maxLength" format="integer" />
+        <attr name="endIcon" format="reference" />
+        <attr name="android:enabled" />
+        <attr name="android:minLines" />
+        <attr name="android:gravity" />
+        <attr name="android:imeOptions" />
+        <attr name="android:inputType" />
+        <attr name="android:textColor" />
+        <attr name="android:textSize" />
+        <attr name="hideLabelOnEdit" format="boolean" />
+        <attr name="android:lineSpacingExtra" />
+        <attr name="dateFrom" format="string" />
+        <attr name="dateTo" format="string" />
+        <attr name="minDate" format="enum">
+            <enum name="none" value="0" />
+            <enum name="today" value="1" />
+            <enum name="tomorrow" value="2" />
+        </attr>
+        <attr name="maxDate" format="enum">
+            <enum name="none" value="0" />
+            <enum name="today" value="1" />
+            <enum name="yesterday" value="2" />
+        </attr>
+        <attr name="type" format="enum">
+            <enum name="text" value="0" />
+            <enum name="textNumber" value="1" />
+            <enum name="textEmail" value="2" />
+            <enum name="textPhone" value="3" />
+            <enum name="textMultiLine" value="4" />
+            <enum name="textPassword" value="5" />
+            <enum name="textUrl" value="6" />
+            <enum name="textUsername" value="7" />
+            <enum name="time" value="8" />
+            <enum name="date" value="9" />
+            <enum name="dropdown" value="10" />
+            <enum name="checkbox" value="11" />
+            <enum name="currency" value="12" />
+            <enum name="dateRange" value="13" />
+        </attr>
+    </declare-styleable>
+
+</resources>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/textbox_background"
+            android:padding="@dimen/activity_margin"
+            android:paddingVertical="0dp"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/colorNormal"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Michael" />
+
+        <TextView
+            android:id="@+id/textLabel"
+            style="@style/TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|top"
+            android:layout_marginHorizontal="@dimen/activity_margin"
+            android:background="@color/white90alpha"
+            android:textColor="@color/colorNormal"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Label"
+            tools:visibility="visible" />
+
+        <CheckedTextView
+            android:id="@+id/buttonEndIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/activity_margin"
+            android:gravity="center"
+            android:src="@drawable/btn_checkbox"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/editText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editText"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/textHelper"
+            style="@style/TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginHorizontal="@dimen/activity_margin"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/editText"
+            tools:text="Assistive Text"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/textError"
+            style="@style/TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="@dimen/activity_margin"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/errorColor"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/editText"
+            tools:text="Invalid email address"
+            tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

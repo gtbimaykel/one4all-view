@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/colorAccent">
+    <item android:id="@android:id/mask">
+        <shape>
+            <corners android:radius="3dp" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/colorAccent" />
+            <solid android:color="@color/colorAccent" />
+        </shape>
+    </item>
+    <item>
+        <selector xmlns:android="http://schemas.android.com/apk/res/android">
+            <item android:state_checked="true">
+                <vector
+                    android:width="24dp"
+                    android:height="24dp"
+                    android:viewportWidth="24"
+                    android:viewportHeight="24">
+                    <group>
+                        <clip-path
+                            android:fillType="evenOdd"
+                            android:pathData="M2.6667,0H21.3333C22.8133,0 24,1.2 24,2.6667V21.3333C24,22.8 22.8133,24 21.3333,24H2.6667C1.1867,24 0,22.8 0,21.3333V2.6667C0,1.2 1.1867,0 2.6667,0ZM2.6667,12L9.3333,18.6667L21.3333,6.6667L19.4533,4.7734L9.3333,14.8934L4.5467,10.12L2.6667,12Z" />
+                        <path
+                            android:fillColor="#65676B"
+                            android:pathData="M-4,-4h32v32h-32z" />
+                    </group>
+                </vector>
+            </item>
+            <item>
+                <vector
+                    android:width="24dp"
+                    android:height="24dp"
+                    android:viewportWidth="24"
+                    android:viewportHeight="24">
+                    <path
+                        android:fillColor="#65676B"
+                        android:fillType="evenOdd"
+                        android:pathData="M22,2H2V22H22V2ZM2,0C0.8954,0 0,0.8954 0,2V22C0,23.1046 0.8954,24 2,24H22C23.1046,24 24,23.1046 24,22V2C24,0.8954 23.1046,0 22,0H2Z" />
+                </vector>
+            </item>
+        </selector>
+    </item>
+</ripple>
