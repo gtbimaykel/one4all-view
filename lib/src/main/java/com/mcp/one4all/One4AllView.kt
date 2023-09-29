@@ -22,16 +22,15 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.mcp.one4all.databinding.ViewInputFieldBinding
-import com.mcp.one4all.extension.plusDays
 import com.mcp.one4all.extension.setTextColorRes
 import com.mcp.one4all.extension.setTextSizeSp
 import com.mcp.one4all.util.InputValidator
-import com.mcp.one4all.util.today
+import com.mcp.one4all.util.calendarDate
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class One4AllView : LinearLayout {
+class One4AllView : IOne4AllView, LinearLayout {
     private var isLabelAllCaps: Boolean = false
     private var validator = InputFieldValidator()
     private var onInputChangeListener: OnInputChangeListener? = null
@@ -96,12 +95,12 @@ class One4AllView : LinearLayout {
             binding.editText.inputType = value
         }
 
-    var endIconOnClickListener: OnClickListener? = null
+    override var endIconOnClickListener: OnClickListener? = null
         set(value) {
             field = value
             binding.apply {
                 buttonEndIcon.setOnClickListener(value)
-                if (type == ViewType.dropdown) {
+                if (viewType == ViewType.dropdown) {
                     editText.setOnClickListener(value)
                 }
             }
@@ -145,7 +144,7 @@ class One4AllView : LinearLayout {
             }
         }
 
-    var type: ViewType = ViewType.text
+    var viewType: ViewType = ViewType.text
         set(value) {
             field = value
 
@@ -280,12 +279,20 @@ class One4AllView : LinearLayout {
             }
         }
 
-    var endIcon: Int = 0
+    override var endIcon: Int = 0
         set(value) {
             field = value
             binding.apply {
                 buttonEndIcon.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, value, 0)
                 buttonEndIcon.isVisible = value != 0
+            }
+        }
+    override var isVisible: Boolean
+        get() = super.getVisibility() == View.VISIBLE
+        set(value) {
+            when (value) {
+                true -> super.setVisibility(View.VISIBLE)
+                else -> super.setVisibility(View.GONE)
             }
         }
 
@@ -333,7 +340,7 @@ class One4AllView : LinearLayout {
         }
     }
 
-    var text: String
+    protected var text: String
         get() = binding.editText.text.toString()
         set(value) {
             binding.editText.setText(value)
@@ -390,7 +397,7 @@ class One4AllView : LinearLayout {
             R.styleable.InputField_android_inputType,
             EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
         )
-        type = ViewType.values()[array.getInt(R.styleable.InputField_type, 0)]
+        viewType = ViewType.values()[array.getInt(R.styleable.InputField_type, 0)]
         setValue(array.getString(R.styleable.InputField_value) ?: "")
 
         isLabelAllCaps = array.getBoolean(R.styleable.InputField_labelAllCaps, false)
@@ -635,7 +642,7 @@ class One4AllView : LinearLayout {
 
             var labelType = label.toLowerCase()
 
-            when (type) {
+            when (viewType) {
                 ViewType.textEmail -> {
                     isValid = text.isEmpty() || InputValidator.isValidEmail(text)
                 }
@@ -668,9 +675,9 @@ class One4AllView : LinearLayout {
 
             //
             if (!isValid && showError) {
-                if (type == ViewType.textUsername) {
+                if (viewType == ViewType.textUsername) {
                     setError(context.getString(R.string.validationError_invalid_username_format))
-                } else if (type == ViewType.textPassword) {
+                } else if (viewType == ViewType.textPassword) {
                     setError(context.getString(R.string.validationError_invalid_password_format))
                 } else {
                     setError(context.getString(R.string.validationError_invalid, labelType))
@@ -692,7 +699,7 @@ class One4AllView : LinearLayout {
         }
 
         /**
-         * Devs can sub class and override this method if you want to add other validations
+         * Clients can sub class and override this method if need to add other validations
          *
          * @param textInput
          * @return
@@ -706,7 +713,7 @@ class One4AllView : LinearLayout {
         binding.editText.isEnabled = enabled
     }
 
-    fun addTextChangedListener(textWatcher: TextWatcher) {
+    override fun addTextChangedListener(textWatcher: TextWatcher) {
         binding.editText.addTextChangedListener(textWatcher)
     }
 
@@ -715,11 +722,11 @@ class One4AllView : LinearLayout {
     }
 
     private var _value: String = ""
-    fun getValue() = _value.trim()
+    override fun value() = _value.trim()
 
-    fun setValue(value: String) {
+    override fun setValue(value: String) {
         binding.apply {
-            when (type) {
+            when (viewType) {
                 ViewType.checkbox -> {
                     _value = value
                     text = _value
@@ -750,40 +757,8 @@ class One4AllView : LinearLayout {
         }
     }
 
-    fun calendarDate(): Calendar =
-        GregorianCalendar.getInstance()
-
     interface OnInputChangeListener {
         fun onInputChange(inputView: One4AllView)
-    }
-
-
-    enum class MinDate {
-        None,
-        Today,
-        Tomorrow;
-
-        fun date(): Date? {
-            return when (this) {
-                Today -> today()
-                Tomorrow -> today().plusDays(1)
-                else -> null
-            }
-        }
-    }
-
-    enum class MaxDate {
-        None,
-        Today,
-        Yesterday;
-
-        fun date(): Date? {
-            return when (this) {
-                Today -> today()
-                Yesterday -> today().plusDays(-1)
-                else -> null
-            }
-        }
     }
 
     fun isValidPhoneNumber(phoneNumber: String?): Boolean {

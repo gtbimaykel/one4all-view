@@ -11,7 +11,7 @@ internal class SampleViewHolder(private val binding: ItemSampleBinding) :
             label = item.label
             helperText = item.helperText
             isRequired = item.isRequired
-            type = item.inputType
+            viewType = item.inputType
         }
     }
 
