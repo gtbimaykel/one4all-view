@@ -12,17 +12,23 @@ interface IOne4AllView {
     var hideLabelOnEdit: Boolean
     var dateFormat: String?
     var timeFormat: String?
-
-    fun value(): String
-    fun setValue(value: String)
-
     var endIcon: Int
     var isVisible: Boolean
+    var onEndIconClickListener: OnClickListener?
 
-    var onEndIconClickListener: View.OnClickListener?
+    fun value(): String
+
+    fun setValue(value: String)
+
     fun addTextChangedListener(textWatcher: TextWatcher)
 
     fun setOnClickListener(l: OnClickListener?)
+
+    fun setError(error: CharSequence?)
+
+    fun setValidator(validator: One4AllView.InputFieldValidator)
+
+    fun validate(showError: Boolean): Boolean
 }
 
 interface OnInputChangeListener {
