@@ -38,6 +38,9 @@ class SampleActivity : AppCompatActivity() {
         ViewType.values().forEach {
             list.add(SampleData(it.name.capitalizeFirstLetter(), it, isRequired = rng.nextBoolean()))
         }
+        ViewType.values().forEach {
+            list.add(SampleData(it.name.capitalizeFirstLetter(), it, isRequired = rng.nextBoolean()))
+        }
         return list
     }
 }

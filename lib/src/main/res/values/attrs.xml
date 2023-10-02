@@ -50,13 +50,12 @@
             <enum name="textMultiLine" value="4" />
             <enum name="textPassword" value="5" />
             <enum name="textUrl" value="6" />
-            <enum name="textUsername" value="7" />
-            <enum name="time" value="8" />
-            <enum name="date" value="9" />
-            <enum name="dropdown" value="10" />
-            <enum name="checkbox" value="11" />
-            <enum name="currency" value="12" />
-            <enum name="dateRange" value="13" />
+            <enum name="time" value="7" />
+            <enum name="date" value="8" />
+            <enum name="dropdown" value="9" />
+            <enum name="checkbox" value="10" />
+            <enum name="currency" value="11" />
+            <enum name="dateRange" value="12" />
         </attr>
     </declare-styleable>
 

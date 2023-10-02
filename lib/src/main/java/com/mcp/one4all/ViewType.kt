@@ -8,7 +8,6 @@ enum class ViewType {
     textMultiLine,
     textPassword,
     textUrl,
-    textUsername,
     time,
     date,
     dropdown,

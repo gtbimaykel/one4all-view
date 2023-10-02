@@ -15,9 +15,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-object DialogUtil {
+open class DialogUtil {
 
-    fun showDatePickerDialog(
+    open fun showDatePickerDialog(
         context: Context, selectedDate: Calendar, minDate: MinDate, maxDate: MaxDate,
         dateFormatter: SimpleDateFormat,
         onSelect: (String) -> Unit
@@ -45,7 +45,7 @@ object DialogUtil {
         datePickerDialog.show()
     }
 
-    fun showTimePickerDialog(
+    open fun showTimePickerDialog(
         context: Context, selectedTime: Calendar,
         timeFormatter: SimpleDateFormat,
         onSelect: (String) -> Unit
@@ -70,7 +70,7 @@ object DialogUtil {
         timePickerDialog.show()
     }
 
-    fun showDateRangPickerDialog(context: Context, selectedRange: String, dateFormatter: SimpleDateFormat, onSelect: (String) -> Unit) {
+    open fun showDateRangPickerDialog(context: Context, selectedRange: String, dateFormatter: SimpleDateFormat, onSelect: (String) -> Unit) {
         val selectOnlyFromTodayForwardConstraint =
             CalendarConstraints.Builder()
                 .setValidator(DateValidatorPointForward.now())

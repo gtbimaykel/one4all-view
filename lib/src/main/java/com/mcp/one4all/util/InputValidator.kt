@@ -40,14 +40,6 @@ internal class InputValidator {
             }
         }
 
-        fun isValidUsername(text: String?): Boolean {
-            return if (text.isNullOrEmpty()) {
-                false
-            } else {
-                isValid(USERNAME_PATTERN, text)
-            }
-        }
-
         fun isValid(expression: String, text: String): Boolean {
             val pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
             val matcher = pattern.matcher(text)
@@ -66,15 +58,6 @@ internal class InputValidator {
             val pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
             val matcher = pattern.matcher(value)
             return matcher.matches()
-        }
-
-        fun parseBoolean(string: String): Boolean {
-            try {
-                return Integer.parseInt(string) > 0
-            } catch (nfe: NumberFormatException) {
-                return java.lang.Boolean.parseBoolean(string)
-            }
-
         }
 
         fun areSameDay(date1: Long, date2: Long): Boolean {
