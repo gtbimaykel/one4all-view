@@ -39,7 +39,18 @@ class One4AllView : IOne4AllView, LinearLayout {
     var minDate: MinDate = MinDate.None
     var maxDate: MaxDate = MaxDate.None
 
-    var onSubmitListener: OnClickListener? = null
+    fun setOnEditorActionListener(imeOptions: Int = EditorInfo.IME_ACTION_DONE, onSubmit: (String) -> Unit) {
+            binding.editText.apply {
+                this.imeOptions = imeOptions
+                setOnEditorActionListener { _, i, _ ->
+                    if (i == imeOptions) {
+                        onSubmit(value())
+                    }
+                    true
+                }
+            }
+        }
+
     private var hideLabelOnEdit: Boolean = DefaultValues.hideLabelOnEdit
     private var validator = InputFieldValidator()
     private var onInputChangeListener: OnInputChangeListener? = null
@@ -162,6 +173,7 @@ class One4AllView : IOne4AllView, LinearLayout {
             isSingleLine = false
             isElegantTextHeight = true
             maxLines = 4
+            imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
         }
     }
 
@@ -385,7 +397,9 @@ class One4AllView : IOne4AllView, LinearLayout {
         if (array.hasValue(R.styleable.One4AllView_android_enabled)) {
             isEnabled = array.getBoolean(R.styleable.One4AllView_android_enabled, true)
         }
-        imeOptions = array.getInt(R.styleable.One4AllView_android_imeOptions, 0)
+        if (array.hasValue(R.styleable.One4AllView_android_imeOptions)) {
+            imeOptions = array.getInt(R.styleable.One4AllView_android_imeOptions, 0)
+        }
 
         binding.apply {
             applyEditTextStyle(editText, array)
@@ -433,15 +447,8 @@ class One4AllView : IOne4AllView, LinearLayout {
             }
 
             addTextChangedListener(textWatcher)
-            setOnEditorActionListener { _, i, _ ->
-                if (i == EditorInfo.IME_ACTION_GO || i == EditorInfo.IME_ACTION_DONE) {
-                    onSubmitListener?.onClick(editText)
-                }
-                true
-            }
         }
     }
-
 
     override fun setError(error: CharSequence?) {
         binding.apply {
