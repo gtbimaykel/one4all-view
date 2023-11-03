@@ -7,3 +7,10 @@ fun String.capitalizeFirstLetter(): String = this.replaceFirstChar {
         Locale.ROOT
     ) else it.toString()
 }
+
+fun String.parseBoolean(): Boolean {
+    return when (this.lowercase(Locale.getDefault())) {
+        "1", "true" -> true
+        else -> false
+    }
+}

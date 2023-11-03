@@ -12,10 +12,12 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.mcp.one4all.databinding.ViewInputFieldBinding
+import com.mcp.one4all.extension.parseBoolean
 import com.mcp.one4all.extension.setTextColorRes
 import com.mcp.one4all.extension.setTextSizeSp
 import com.mcp.one4all.util.DialogUtil
@@ -23,7 +25,8 @@ import com.mcp.one4all.util.InputValidator
 import com.mcp.one4all.util.calendarDate
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class One4AllView : IOne4AllView, LinearLayout {
     private lateinit var binding: ViewInputFieldBinding
@@ -47,6 +50,9 @@ class One4AllView : IOne4AllView, LinearLayout {
 
     private var dateFormatter: SimpleDateFormat = SimpleDateFormat(DefaultValues.dateFormat)
     private var timeFormatter: SimpleDateFormat = SimpleDateFormat(DefaultValues.timeFormat)
+
+    var onCheckChangedListener: ((IOne4AllView, Boolean) -> Unit)? = null
+
     override var dateFormat: String = DefaultValues.dateFormat
         set(value) {
             field = value
@@ -142,13 +148,8 @@ class One4AllView : IOne4AllView, LinearLayout {
     }
 
     override fun useAsDropDown() {
+        endIcon = R.drawable.btn_dropdown_toggle
         binding.apply {
-            buttonEndIcon.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                0,
-                0,
-                R.drawable.btn_dropdown_toggle,
-                0
-            )
             buttonEndIcon.isVisible = true
             editText.isFocusable = false
             editText.isClickable = true
@@ -181,6 +182,17 @@ class One4AllView : IOne4AllView, LinearLayout {
     }
 
     override fun useAsCheckbox() {
+        endIcon = R.drawable.btn_checkbox
+        binding.apply {
+            buttonEndIcon.setOnClickListener {
+                buttonEndIcon.isChecked = !buttonEndIcon.isChecked
+                setValue(buttonEndIcon.isChecked.toString())
+                onCheckChangedListener?.invoke(this@One4AllView, buttonEndIcon.isChecked)
+            }
+            buttonEndIcon.isVisible = true
+            editText.isFocusable = false
+            editText.isClickable = false
+        }
     }
 
     override fun useAsTimePicker() {
@@ -188,16 +200,11 @@ class One4AllView : IOne4AllView, LinearLayout {
         if (defaultTime.isEmpty()) {
             time = timeFormatter.format(Date())
         }
+        endIcon = R.drawable.ic_clock
         binding.apply {
-            buttonEndIcon.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                0,
-                0,
-                R.drawable.ic_clock,
-                0
-            )
             buttonEndIcon.isVisible = true
             editText.isFocusable = false
-            editText.isClickable = true
+            editText.isClickable = false
             editText.setOnClickListener { showTimePicker(time) }
         }
     }
@@ -207,16 +214,11 @@ class One4AllView : IOne4AllView, LinearLayout {
         if (defaultDate.isEmpty()) {
             date = dateFormatter.format(Date())
         }
+        endIcon = R.drawable.ic_calendar
         binding.apply {
-            buttonEndIcon.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                0,
-                0,
-                R.drawable.ic_calendar,
-                0
-            )
             buttonEndIcon.isVisible = true
             editText.isFocusable = false
-            editText.isClickable = true
+            editText.isClickable = false
             editText.setOnClickListener { showDateRangePicker(date) }
         }
     }
@@ -226,16 +228,11 @@ class One4AllView : IOne4AllView, LinearLayout {
         if (defaultDate.isEmpty()) {
             date = dateFormatter.format(Date())
         }
+        endIcon = R.drawable.ic_calendar
         binding.apply {
-            buttonEndIcon.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                0,
-                0,
-                R.drawable.ic_calendar,
-                0
-            )
             buttonEndIcon.isVisible = true
             editText.isFocusable = false
-            editText.isClickable = true
+            editText.isClickable = false
             editText.setOnClickListener { showDatePicker(date) }
         }
     }
@@ -643,12 +640,21 @@ class One4AllView : IOne4AllView, LinearLayout {
     private var _value: String = ""
     override fun value() = _value.trim()
 
+    fun isChecked(): Boolean {
+        binding.apply {
+            return when (viewType) {
+                ViewType.checkbox -> buttonEndIcon.isChecked
+                else -> _value.parseBoolean()
+            }
+        }
+    }
+
     override fun setValue(value: String) {
         binding.apply {
             when (viewType) {
                 ViewType.checkbox -> {
                     _value = value
-                    text = _value
+                    binding.buttonEndIcon.isChecked = value.parseBoolean()
                 }
 
                 ViewType.currency -> {
